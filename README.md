@@ -1,16 +1,23 @@
-# sample_project
+Flutter Holidays App
+This is a Flutter application that displays holidays in the UK. The data is sourced from the gov.uk website.
 
-A new Flutter project.
+Features:
+1. Displays holidays for England and Wales, Scotland, and Northern Ireland.
+2. Displays the name and date of each holiday.
 
-## Getting Started
+Getting Started:
 
-This project is a starting point for a Flutter application.
+1.Clone the repository:
+git clone https://github.com/<username>/sample.git
+2. flutter pub get
+3.flutter run
 
-A few resources to get you started if this is your first Flutter project:
+Screenshots:
+Here are some screenshots of the app:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+*COMING SOON
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Contributing:
+
+Contributions are welcome! Please submit a pull request if you would like to add a feature or fix a bug.
+
