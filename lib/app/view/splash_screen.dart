@@ -20,7 +20,7 @@ class SplashScreen extends HookWidget {
       backgroundColor: Colors.green,
       body: Center(
         child: Text(
-          'Explore with us',
+          'Explore with us!!',
           style: GoogleFonts.openSans(
             fontSize: 20.0,
             fontStyle: FontStyle.italic,
