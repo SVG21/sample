@@ -13,55 +13,62 @@ class HolidaysList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
+
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'message-notifications',
+      'Message Notifications',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
 
     useEffect(() {
       firebaseMessaging.getToken().then((token) {
-        print('Firebase Messaging Token: $token');
+        return token;
+        // print('Firebase Messaging Token: $token');
       });
     }, []);
+
+
+
     final currentIndex = useState(0);
 
     final holidaysFuture = ref.watch(holidaysProvider);
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.green,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 30.0),
             child: GestureDetector(
-                onTap: () {
-                  print("tapped");
-                  FirebaseMessaging.onMessage
-                      .listen((RemoteMessage message) async {
-                    print('Got a message whilst in the foreground!');
-                    print('Message data: ${message.data}');
-                    if (message.notification != null) {
-                      print(
-                          'Message also contained a notification: ${message.notification}');
-                      print('Received a notification:');
-                      print('Title: ${message.notification?.title}');
-                      print('Body: ${message.notification?.body}');
-                    }
-                    var androidPlatformChannelSpecifics =
-                        const AndroidNotificationDetails(
-                            'message-notifications', 'Message Notifications',
-                            importance: Importance.max, priority: Priority.high);
-
-                    var platformChannelSpecifics = NotificationDetails(
-                      android: androidPlatformChannelSpecifics,
-                    );
-                    flutterLocalNotificationsPlugin.show(
-                        0,
-                        message.notification?.title,
-                        message.notification?.body,
-                        platformChannelSpecifics,
-                        payload: message.data['your-data']);
-                  });
+                onTap: () async {
+                  await flutterLocalNotificationsPlugin
+                      .initialize(initializationSettings);
+                  await flutterLocalNotificationsPlugin.show(
+                    1,
+                    'Buckle up!! Holidays arriving soon!',
+                    'Have you planned you vacation yet?',
+                    platformChannelSpecifics,
+                  );
                 },
-                child: Icon(Icons.notification_add)),
+                child: const Icon(Icons.notification_add)),
           )
         ],
         title: Text(
