@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -13,6 +14,8 @@ class HolidaysList extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
 
     useEffect(() {
       firebaseMessaging.getToken().then((token) {
@@ -25,6 +28,42 @@ class HolidaysList extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 30.0),
+            child: GestureDetector(
+                onTap: () {
+                  print("tapped");
+                  FirebaseMessaging.onMessage
+                      .listen((RemoteMessage message) async {
+                    print('Got a message whilst in the foreground!');
+                    print('Message data: ${message.data}');
+                    if (message.notification != null) {
+                      print(
+                          'Message also contained a notification: ${message.notification}');
+                      print('Received a notification:');
+                      print('Title: ${message.notification?.title}');
+                      print('Body: ${message.notification?.body}');
+                    }
+                    var androidPlatformChannelSpecifics =
+                        const AndroidNotificationDetails(
+                            'message-notifications', 'Message Notifications',
+                            importance: Importance.max, priority: Priority.high);
+
+                    var platformChannelSpecifics = NotificationDetails(
+                      android: androidPlatformChannelSpecifics,
+                    );
+                    flutterLocalNotificationsPlugin.show(
+                        0,
+                        message.notification?.title,
+                        message.notification?.body,
+                        platformChannelSpecifics,
+                        payload: message.data['your-data']);
+                  });
+                },
+                child: Icon(Icons.notification_add)),
+          )
+        ],
         title: Text(
           "Holidays in the UK in a year",
           style: GoogleFonts.openSans(
