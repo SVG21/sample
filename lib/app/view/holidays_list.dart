@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,6 +12,13 @@ class HolidaysList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+
+    useEffect(() {
+      firebaseMessaging.getToken().then((token) {
+        print('Firebase Messaging Token: $token');
+      });
+    }, []);
     final currentIndex = useState(0);
 
     final holidaysFuture = ref.watch(holidaysProvider);
