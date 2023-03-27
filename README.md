@@ -8,8 +8,8 @@ FEATURES:
 
 1. Displays holidays for England and Wales, Scotland, and Northern Ireland.
 2. Displays the name and date of each holiday.
-3.Displays push notification when user interracts.
-4.Displays background push notification.
+3. Displays push notification when user interracts.
+4. Displays background push notification.
 
 
 
@@ -25,22 +25,19 @@ User interaction notifications are delivered when the user is actively using the
 
 To implement push notifications in your app, you need to follow these steps:
 
-1.Set up your Firebase project and configure your app to use FCM.
-2.Register your app for push notifications and retrieve the push notification token.
-3.Create a notification payload that includes the message, title, and any additional data that needs to be passed to the app.
-4.Send the notification payload to the FCM server, which will forward it to the appropriate device.
-5.Handle the notification on the device by implementing a callback function that is triggered when the notification is received.
+1. Set up your Firebase project and configure your app to use FCM.
+2. Register your app for push notifications and retrieve the push notification token.
+3. Create a notification payload that includes the message, title, and any additional data that needs to be passed to the app.
+4. Send the notification payload to the FCM server, which will forward it to the appropriate device.
+5. Handle the notification on the device by implementing a callback function that is triggered when the notification is received.
 For background notifications, you need to implement a service or broadcast receiver that listens for incoming notifications and handles them appropriately. For user interaction notifications, you can use the FCM SDK to display the notification to the user and handle any actions that the user takes.
 
 
 GETTING STARTED:
 
-1.Clone the repository: git clone https://github.com//sample.git
-2.flutter pub get
-3.flutter run
-
-SCREENSHOTS: Here are some screenshots of the app:
-
+1. Clone the repository: git clone https://github.com//sample.git
+2. flutter pub get
+3. flutter run
 
 *COMING SOON
 

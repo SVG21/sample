@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sample_project/app/view/holidays_list.dart';
+import 'package:sample_project/ui/holidays_list.dart';
 
 class SplashScreen extends HookWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -9,14 +9,14 @@ class SplashScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 2)).then((_) {
-      Navigator.of(context).pushReplacement(
+      Navigator.of(context).push(
         MaterialPageRoute(
           builder: (BuildContext context) => const HolidaysList(),
         ),
       );
     });
 
-    return  Scaffold(
+    return Scaffold(
       backgroundColor: Colors.green,
       body: Center(
         child: Text(

@@ -1,12 +1,12 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:intl/intl.dart';
+import 'package:sample_project/providers.dart';
+import 'package:sample_project/ui/calendar_screen.dart';
 import '../model/holiday_model.dart';
-import '../repositories/holiday_repository.dart';
 
 class HolidaysList extends HookConsumerWidget {
   const HolidaysList({Key? key}) : super(key: key);
@@ -16,61 +16,19 @@ class HolidaysList extends HookConsumerWidget {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
-
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: initializationSettingsAndroid,
-    );
-
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      'message-notifications',
-      'Message Notifications',
-      importance: Importance.max,
-      priority: Priority.high,
-    );
-
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
 
     useEffect(() {
       firebaseMessaging.getToken().then((token) {
         return token;
-        // print('Firebase Messaging Token: $token');
       });
     }, []);
-
-
-
-    final currentIndex = useState(0);
 
     final holidaysFuture = ref.watch(holidaysProvider);
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.green,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 30.0),
-            child: GestureDetector(
-                onTap: () async {
-                  await flutterLocalNotificationsPlugin
-                      .initialize(initializationSettings);
-                  await flutterLocalNotificationsPlugin.show(
-                    1,
-                    'Buckle up!! Holidays arriving soon!',
-                    'Have you planned you vacation yet?',
-                    platformChannelSpecifics,
-                  );
-                },
-                child: const Icon(Icons.notification_add)),
-          )
-        ],
         title: Text(
           "Holidays in the UK in a year",
           style: GoogleFonts.openSans(
@@ -79,11 +37,11 @@ class HolidaysList extends HookConsumerWidget {
             color: Colors.white70,
           ),
         ),
-        centerTitle: true,
+        centerTitle: false,
       ),
       body: holidaysFuture.when(
         data: (holidays) {
-          return _HolidaysListView(
+          return HolidaysListView(
             holidays: holidays,
           );
         },
@@ -97,30 +55,14 @@ class HolidaysList extends HookConsumerWidget {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex.value,
-        selectedItemColor: Colors.green,
-        onTap: (index) => currentIndex.value = index,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Holidays',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.timer),
-            label: 'Countdown',
-          ),
-          // Add more items here as needed
-        ],
-      ),
     );
   }
 }
 
-class _HolidaysListView extends HookConsumerWidget {
+class HolidaysListView extends HookConsumerWidget {
   final List<Holidays> holidays;
 
-  const _HolidaysListView({Key? key, required this.holidays}) : super(key: key);
+  const HolidaysListView({Key? key, required this.holidays}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -141,7 +83,7 @@ class _HolidaysListView extends HookConsumerWidget {
                     itemsToShow.value += 5;
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
+                    backgroundColor: Colors.green,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
@@ -170,7 +112,7 @@ class _HolidaysListView extends HookConsumerWidget {
                 const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             child: ListTile(
               leading: const Icon(
-                Icons.calendar_today,
+                Icons.calendar_month,
                 color: Colors.green,
                 size: 32.0,
               ),
@@ -183,7 +125,7 @@ class _HolidaysListView extends HookConsumerWidget {
                 ),
               ),
               subtitle: Text(
-                event.date.toString(),
+                DateFormat.yMMMEd().format(event.date),
                 style: GoogleFonts.openSans(
                   fontSize: 16.0,
                   color: Colors.grey[600],
@@ -194,7 +136,15 @@ class _HolidaysListView extends HookConsumerWidget {
                 color: Colors.grey[400],
               ),
               onTap: () {
-                // Add onTap functionality here
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CalendarScreen(
+                      title: event.title!,
+                      currentSelectedDate: event.date,
+                    ),
+                  ),
+                );
               },
             ),
           );
