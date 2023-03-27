@@ -12,7 +12,6 @@ FEATURES:
 4. Displays background push notification.
 
 
-
 DESCRIPTION: 
 
 Flutter Holidays App This is a Flutter application that displays holidays in the UK. The data is sourced from the gov.uk website. Also, push notification is implemented here. Firebase Cloud Messaging (FCM) is a messaging platform that allows you to send notifications and messages to devices across different platforms, including Android, iOS, and web. Push notifications are one of the most important features of FCM, which enable you to engage with your users even when they are not actively using your app.
@@ -38,8 +37,6 @@ GETTING STARTED:
 1. Clone the repository: git clone https://github.com//sample.git
 2. flutter pub get
 3. flutter run
-
-*COMING SOON
 
 CONTRIBUTING:
 

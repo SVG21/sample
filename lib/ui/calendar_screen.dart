@@ -41,8 +41,8 @@ class CalendarScreen extends StatelessWidget {
               .initialize(initializationSettings);
           await flutterLocalNotificationsPlugin.show(
             1,
-            'Buckle up!! Holidays arriving soon!',
-            'Have you planned you vacation yet for $title',
+            'Have you planned your vacation yet for $title',
+            'explore more with us',
             platformChannelSpecifics,
           );
         },
